@@ -48,6 +48,15 @@ func DayActionInfo(data string, weight, height float64) string {
 		fmt.Println("steps are zero")
 		return " "
 	}
+	if weight <= 0 {
+		fmt.Println("weight are zero")
+		return " "
+	}
+
+	if height <= 0 {
+		fmt.Println("height are zero")
+		return " "
+	}
 
 	distanceWalk := (float64(steps) * stepLength) / float64(mInKm)
 	calories, err := spentcalories.WalkingSpentCalories(steps, weight, height, duration)

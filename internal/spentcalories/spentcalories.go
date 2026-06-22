@@ -38,12 +38,30 @@ func parseTraining(data string) (int, string, time.Duration, error) {
 
 // принимает шаги и рост, возвращает дистанцию в километрах
 func distance(steps int, height float64) float64 {
+	if steps <= 0 {
+		fmt.Println("steps are zero")
+		return 0
+	}
+
+	if height <= 0 {
+		fmt.Println("height are zero")
+		return 0
+	}
+
 	return ((height * stepLengthCoefficient) * float64(steps)) / mInKm
 }
 
 // возвращает среднюю скорость
 func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 	if duration <= 0 {
+		return 0
+	}
+	if steps <= 0 {
+		fmt.Println("steps are zero")
+		return 0
+	}
+	if height <= 0 {
+		fmt.Println("height are zero")
 		return 0
 	}
 
@@ -59,6 +77,13 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	if err != nil {
 		log.Println(err)
 		return " ", err
+	}
+
+	if height <= 0 {
+		return " ", fmt.Errorf("height are zero")
+	}
+	if weight <= 0 {
+		return " ", fmt.Errorf("weight are zero")
 	}
 
 	distanceTraining := distance(steps, height)
@@ -90,6 +115,15 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 	if steps <= 0 {
 		return 0, fmt.Errorf("steps are zero")
 	}
+	if weight <= 0 {
+		return 0, fmt.Errorf("weight are zero")
+	}
+	if height <= 0 {
+		return 0, fmt.Errorf("height are zero")
+	}
+	if duration <= 0 {
+		return 0, fmt.Errorf("duration are zero")
+	}
 
 	durationMinutes := duration.Minutes()
 	averageSpeed := meanSpeed(steps, height, duration)
@@ -101,6 +135,15 @@ func RunningSpentCalories(steps int, weight, height float64, duration time.Durat
 func WalkingSpentCalories(steps int, weight, height float64, duration time.Duration) (float64, error) {
 	if steps <= 0 {
 		return 0, fmt.Errorf("steps are zero")
+	}
+	if weight <= 0 {
+		return 0, fmt.Errorf("weight are zero")
+	}
+	if height <= 0 {
+		return 0, fmt.Errorf("height are zero")
+	}
+	if duration <= 0 {
+		return 0, fmt.Errorf("duration are zero")
 	}
 
 	averageSpeed := meanSpeed(steps, height, duration)
