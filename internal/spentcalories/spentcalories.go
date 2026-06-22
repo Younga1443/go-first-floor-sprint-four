@@ -114,10 +114,10 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 	switch typeActivity {
 	case "Бег":
-		runOutput := fmt.Sprintf("Тип тренировки: %s\nДлительность: %v ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", typeActivity, durationActivity.Hours(), distanceTraining, averageSpeed, runningSpentCalories)
+		runOutput := fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", typeActivity, durationActivity.Hours(), distanceTraining, averageSpeed, runningSpentCalories)
 		return runOutput, nil
 	case "Ходьба":
-		walkOutput := fmt.Sprintf("Тип тренировки: %s\nДлительность: %v ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", typeActivity, durationActivity.Hours(), distanceTraining, averageSpeed, walkingSpentCalories)
+		walkOutput := fmt.Sprintf("Тип тренировки: %s\nДлительность: %.2f ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", typeActivity, durationActivity.Hours(), distanceTraining, averageSpeed, walkingSpentCalories)
 		return walkOutput, nil
 	default:
 		return "", fmt.Errorf("неизвестный тип тренировки")
