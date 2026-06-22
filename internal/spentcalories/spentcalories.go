@@ -20,17 +20,25 @@ const (
 // возвращает кол-во шагов, вид активности, продолжительность активности
 func parseTraining(data string) (int, string, time.Duration, error) {
 	parts := strings.Split(data, ",")
-
 	if len(parts) != 3 {
-		return 0, " ", 0, fmt.Errorf("len slices is not 3")
+		return 0, "", 0, fmt.Errorf("len slices is not 3")
 	}
 	step, err := strconv.Atoi(parts[0])
 	if err != nil {
-		return 0, " ", 0, err
+		return 0, "", 0, err
 	}
 	timeTraining, err := time.ParseDuration(parts[2])
 	if err != nil {
-		return 0, " ", 0, err
+		return 0, "", 0, err
+	}
+
+	if step <= 0 {
+		fmt.Println("steps are zero")
+		return 0, "", 0, fmt.Errorf("steps are zero")
+	}
+
+	if timeTraining <= 0 {
+		return 0, "", 0, fmt.Errorf("timeTraining are zero")
 	}
 
 	return step, parts[1], timeTraining, nil
@@ -64,6 +72,10 @@ func meanSpeed(steps int, height float64, duration time.Duration) float64 {
 		fmt.Println("height are zero")
 		return 0
 	}
+	if duration <= 0 {
+		fmt.Println("duration are zero")
+		return 0
+	}
 
 	distanceTraining := distance(steps, height)
 	durationHours := duration.Hours()
@@ -76,14 +88,16 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 	steps, typeActivity, durationActivity, err := parseTraining(data)
 	if err != nil {
 		log.Println(err)
-		return " ", err
+		return "", err
 	}
-
+	if durationActivity <= 0 {
+		return "", fmt.Errorf("durationActivity are zero")
+	}
 	if height <= 0 {
-		return " ", fmt.Errorf("height are zero")
+		return "", fmt.Errorf("height are zero")
 	}
 	if weight <= 0 {
-		return " ", fmt.Errorf("weight are zero")
+		return "", fmt.Errorf("weight are zero")
 	}
 
 	distanceTraining := distance(steps, height)
@@ -91,23 +105,24 @@ func TrainingInfo(data string, weight, height float64) (string, error) {
 
 	runningSpentCalories, err := RunningSpentCalories(steps, weight, height, durationActivity)
 	if err != nil {
-		return " ", err
+		return "", err
 	}
 	walkingSpentCalories, err := WalkingSpentCalories(steps, weight, height, durationActivity)
 	if err != nil {
-		return " ", err
+		return "", err
 	}
 
 	switch typeActivity {
 	case "Бег":
-		runOutput := fmt.Sprintf("Тип тренировки: %s\nДлительность: %v ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f", typeActivity, durationActivity, distanceTraining, averageSpeed, runningSpentCalories)
+		runOutput := fmt.Sprintf("Тип тренировки: %s\nДлительность: %v ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", typeActivity, durationActivity.Hours(), distanceTraining, averageSpeed, runningSpentCalories)
 		return runOutput, nil
 	case "Ходьба":
-		walkOutput := fmt.Sprintf("Тип тренировки: %s\nДлительность: %v ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f", typeActivity, durationActivity, distanceTraining, averageSpeed, walkingSpentCalories)
+		walkOutput := fmt.Sprintf("Тип тренировки: %s\nДлительность: %v ч.\nДистанция: %.2f км.\nСкорость: %.2f км/ч\nСожгли калорий: %.2f\n", typeActivity, durationActivity.Hours(), distanceTraining, averageSpeed, walkingSpentCalories)
 		return walkOutput, nil
+	default:
+		return "", fmt.Errorf("неизвестный тип тренировки")
 	}
-
-	return " ", fmt.Errorf("неизвестный тип тренировки")
+	//return " ", fmt.Errorf("неизвестный тип тренировки")
 }
 
 // возвращает кол-во потраченных каллорий при беге
